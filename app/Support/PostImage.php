@@ -19,7 +19,7 @@ class PostImage
     {
         $extension = $file->getClientOriginalExtension() ?: $file->extension() ?: 'jpg';
         $path = self::buildRelativePath($extension, $baseName);
-        $destination = public_path($path);
+        $destination = storage_path('app/public/' . $path);
 
         File::ensureDirectoryExists(dirname($destination));
         $file->move(dirname($destination), basename($destination));
@@ -30,7 +30,7 @@ class PostImage
     public static function storeBinary(string $contents, string $extension, ?string $baseName = null): string
     {
         $path = self::buildRelativePath($extension, $baseName);
-        $destination = public_path($path);
+        $destination = storage_path('app/public/' . $path);
 
         File::ensureDirectoryExists(dirname($destination));
         File::put($destination, $contents);
@@ -47,7 +47,12 @@ class PostImage
         }
 
         $localPath = self::stripLegacyPrefixes($normalizedPath);
+        $storageFile = storage_path('app/public/' . $localPath);
         $publicFile = public_path($localPath);
+
+        if (File::exists($storageFile)) {
+            File::delete($storageFile);
+        }
 
         if (File::exists($publicFile)) {
             File::delete($publicFile);
@@ -66,7 +71,11 @@ class PostImage
             return $normalizedPath;
         }
 
-        return asset(self::stripLegacyPrefixes($normalizedPath));
+        $localPath = self::stripLegacyPrefixes($normalizedPath);
+
+        self::ensureStorageSymlinkFallbackCopy($localPath);
+
+        return asset('storage/' . ltrim($localPath, '/'));
     }
 
     protected static function buildRelativePath(string $extension, ?string $baseName = null): string
@@ -102,5 +111,18 @@ class PostImage
         }
 
         return $path;
+    }
+
+    protected static function ensureStorageSymlinkFallbackCopy(string $path): void
+    {
+        $storageFile = storage_path('app/public/' . $path);
+        $publicFile = public_path($path);
+
+        if (File::exists($storageFile) || ! File::exists($publicFile)) {
+            return;
+        }
+
+        File::ensureDirectoryExists(dirname($storageFile));
+        File::copy($publicFile, $storageFile);
     }
 }
