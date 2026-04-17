@@ -57,7 +57,7 @@ class AiPostController extends Controller
 
         $post = Post::create([
             'category_id' => $category->id,
-            'title' => Arr::get($generated, 'title') ?: $data['topic'],
+            'title' => $data['topic'],
             'excerpt' => Arr::get($generated, 'excerpt'),
             'content' => Arr::get($generated, 'html') ?: '<p>Contenido no disponible.</p>',
             'image' => $imagePath,
