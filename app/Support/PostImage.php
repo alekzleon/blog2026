@@ -9,13 +9,17 @@ use Illuminate\Support\Str;
 class PostImage
 {
     protected const DIRECTORY = 'posts';
+    protected const LEGACY_PREFIXES = [
+        'project/storage/app/public/',
+        'storage/app/public/',
+        'storage/',
+    ];
 
     public static function storeUpload(UploadedFile $file, ?string $baseName = null): string
     {
         $extension = $file->getClientOriginalExtension() ?: $file->extension() ?: 'jpg';
         $path = self::buildRelativePath($extension, $baseName);
-
-        $destination = self::baseFilesystemPath($path);
+        $destination = public_path($path);
 
         File::ensureDirectoryExists(dirname($destination));
         $file->move(dirname($destination), basename($destination));
@@ -26,8 +30,7 @@ class PostImage
     public static function storeBinary(string $contents, string $extension, ?string $baseName = null): string
     {
         $path = self::buildRelativePath($extension, $baseName);
-
-        $destination = self::baseFilesystemPath($path);
+        $destination = public_path($path);
 
         File::ensureDirectoryExists(dirname($destination));
         File::put($destination, $contents);
@@ -43,21 +46,11 @@ class PostImage
             return;
         }
 
-        $localPath = self::stripStoragePrefix($normalizedPath);
-
-        $configuredFile = self::baseFilesystemPath($localPath);
-        if (File::exists($configuredFile)) {
-            File::delete($configuredFile);
-        }
-
+        $localPath = self::stripLegacyPrefixes($normalizedPath);
         $publicFile = public_path($localPath);
-        if ($publicFile !== $configuredFile && File::exists($publicFile)) {
-            File::delete($publicFile);
-        }
 
-        $legacyStoragePath = storage_path('app/public/' . $localPath);
-        if (File::exists($legacyStoragePath)) {
-            File::delete($legacyStoragePath);
+        if (File::exists($publicFile)) {
+            File::delete($publicFile);
         }
     }
 
@@ -73,17 +66,7 @@ class PostImage
             return $normalizedPath;
         }
 
-        $localPath = self::stripStoragePrefix($normalizedPath);
-
-        $baseUrl = rtrim((string) config('app.post_image_url', ''), '/');
-
-        if ($baseUrl !== '') {
-            return $baseUrl . '/' . ltrim($localPath, '/');
-        }
-
-        self::ensurePublicCopy($localPath);
-
-        return asset($localPath);
+        return asset(self::stripLegacyPrefixes($normalizedPath));
     }
 
     protected static function buildRelativePath(string $extension, ?string $baseName = null): string
@@ -110,30 +93,14 @@ class PostImage
         return ltrim($normalizedPath, '/');
     }
 
-    protected static function stripStoragePrefix(string $path): string
+    protected static function stripLegacyPrefixes(string $path): string
     {
-        return Str::startsWith($path, 'storage/')
-            ? Str::after($path, 'storage/')
-            : $path;
-    }
-
-    protected static function ensurePublicCopy(string $path): void
-    {
-        $publicFile = public_path($path);
-        $legacyStorageFile = storage_path('app/public/' . $path);
-
-        if (File::exists($publicFile) || ! File::exists($legacyStorageFile)) {
-            return;
+        foreach (self::LEGACY_PREFIXES as $prefix) {
+            if (Str::startsWith($path, $prefix)) {
+                return Str::after($path, $prefix);
+            }
         }
 
-        File::ensureDirectoryExists(dirname($publicFile));
-        File::copy($legacyStorageFile, $publicFile);
-    }
-
-    protected static function baseFilesystemPath(string $path): string
-    {
-        return config('app.post_image_root') === 'storage'
-            ? storage_path('app/public/' . $path)
-            : public_path($path);
+        return $path;
     }
 }
