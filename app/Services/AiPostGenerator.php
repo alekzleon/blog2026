@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Support\PostImage;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -122,10 +122,7 @@ class AiPostGenerator
             throw new RuntimeException('Generated image payload missing.');
         }
 
-        $fileName = 'posts/' . Str::slug(Str::limit($topic, 70, '')) . '-' . now()->format('YmdHis') . '.png';
-        Storage::disk('public')->put($fileName, base64_decode($imageBase64));
-
-        return $fileName;
+        return PostImage::storeBinary(base64_decode($imageBase64), 'png', $topic);
     }
 
     protected function fallbackContent(string $topic): array

@@ -65,7 +65,7 @@
                 <div class="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] bg-brand-orange/10"></div>
                 <div class="relative overflow-hidden rounded-[2rem] border border-stone-200 bg-white shadow-soft">
                     @if($featuredPost && $featuredPost->image)
-                        <img src="{{ asset('storage/' . $featuredPost->image) }}" alt="{{ $featuredPost->title }}" class="h-full min-h-[320px] w-full object-cover">
+                        <img src="{{ $featuredPost->image_url }}" alt="{{ $featuredPost->title }}" class="h-full min-h-[320px] w-full object-cover">
                     @else
                         <div class="flex min-h-[320px] items-center justify-center bg-[linear-gradient(135deg,_#ffede3_0%,_#fff7f1_55%,_#f6f1ea_100%)] p-10">
                             <div class="max-w-sm space-y-4 text-center">

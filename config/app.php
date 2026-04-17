@@ -54,6 +54,10 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'post_image_url' => env('POST_IMAGE_URL'),
+
+    'post_image_root' => env('POST_IMAGE_ROOT', 'public'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

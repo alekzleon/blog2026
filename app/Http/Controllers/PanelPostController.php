@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Support\PostImage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PanelPostController extends Controller
@@ -63,16 +63,16 @@ class PanelPostController extends Controller
         }
 
         if ($request->boolean('remove_image') && $post->image) {
-            Storage::disk('public')->delete($post->image);
+            PostImage::delete($post->image);
             $post->image = null;
         }
 
         if ($request->hasFile('image')) {
             if ($post->image) {
-                Storage::disk('public')->delete($post->image);
+                PostImage::delete($post->image);
             }
 
-            $post->image = $request->file('image')->store('posts', 'public');
+            $post->image = PostImage::storeUpload($request->file('image'), $validated['title']);
         }
 
         $post->fill([
@@ -99,7 +99,7 @@ class PanelPostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->image) {
-            Storage::disk('public')->delete($post->image);
+            PostImage::delete($post->image);
         }
 
         $post->tags()->detach();

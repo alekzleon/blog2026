@@ -1,7 +1,7 @@
 <article class="group overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-xl">
     @if($post->image)
         <div class="overflow-hidden">
-            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="h-56 w-full object-cover transition duration-500 group-hover:scale-105">
+            <img src="{{ $post->image_url }}" alt="{{ $post->title }}" class="h-56 w-full object-cover transition duration-500 group-hover:scale-105">
         </div>
     @else
         <div class="flex h-56 w-full items-center justify-center bg-[linear-gradient(135deg,_#ffede3_0%,_#fff7f1_55%,_#f6f1ea_100%)] px-8 text-center">

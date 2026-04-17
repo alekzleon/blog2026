@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use App\Support\PostImage;
 
 class Post extends Model
 {
@@ -39,5 +40,10 @@ class Post extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return PostImage::url($this->image);
     }
 }

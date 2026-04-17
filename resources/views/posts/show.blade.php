@@ -6,7 +6,7 @@
         ? \Illuminate\Support\Str::limit(trim(strip_tags($post->excerpt)), 160)
         : \Illuminate\Support\Str::limit(trim(strip_tags($post->content)), 160);
     $canonicalUrl = route('posts.show', $post);
-    $ogImage = $post->image ? asset('storage/' . $post->image) : asset('default-og.svg');
+    $ogImage = $post->image_url ?: asset('default-og.svg');
     $articleSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'Article',
@@ -173,7 +173,7 @@
 
         @if($post->image)
             <div class="relative z-10 mb-10 flex h-72 w-full items-center justify-center overflow-hidden rounded-[2rem] shadow-soft md:h-[30rem]">
-                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="h-full w-full object-contain">
+                <img src="{{ $post->image_url }}" alt="{{ $post->title }}" class="h-full w-full object-contain">
             </div>
         @endif
 

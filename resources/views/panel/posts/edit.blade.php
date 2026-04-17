@@ -67,7 +67,7 @@
 
                 @if($post->image)
                     <div class="space-y-4 rounded-[1.5rem] border border-stone-200 bg-stone-50 px-5 py-5">
-                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="h-56 w-full rounded-[1.25rem] object-cover md:h-64">
+                        <img src="{{ $post->image_url }}" alt="{{ $post->title }}" class="h-56 w-full rounded-[1.25rem] object-cover md:h-64">
                         <label class="flex items-center gap-3 text-sm text-stone-600">
                             <input type="checkbox" name="remove_image" value="1" class="h-4 w-4 rounded border-stone-300 text-brand-orange focus:ring-brand-orange">
                             Eliminar imagen actual

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use App\Services\AiPostGenerator;
+use App\Support\PostImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -38,7 +38,7 @@ class AiPostController extends Controller
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
+            $imagePath = PostImage::storeUpload($request->file('image'), $data['topic']);
         } else {
             $imagePrompt = Arr::get($generated, 'image_prompt');
 
@@ -72,7 +72,6 @@ class AiPostController extends Controller
     protected function storeDefaultImage(string $topic): string
     {
         $safeTopic = e(Str::limit($topic, 60));
-        $fileName = 'posts/default-' . now()->format('YmdHis') . '-' . Str::random(8) . '.svg';
 
         $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
@@ -95,8 +94,6 @@ class AiPostController extends Controller
 </svg>
 SVG;
 
-        Storage::disk('public')->put($fileName, $svg);
-
-        return $fileName;
+        return PostImage::storeBinary($svg, 'svg', 'default-' . $topic);
     }
 }

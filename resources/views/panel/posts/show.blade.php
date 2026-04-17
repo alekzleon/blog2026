@@ -27,7 +27,7 @@
         <div class="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(280px,0.28fr)]">
             <div class="rounded-[2rem] bg-white px-6 py-8 shadow-soft sm:px-8">
                 @if($post->image)
-                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="mb-8 h-72 w-full rounded-[1.75rem] object-cover">
+                    <img src="{{ $post->image_url }}" alt="{{ $post->title }}" class="mb-8 h-72 w-full rounded-[1.75rem] object-cover">
                 @endif
 
                 @if($post->excerpt)
