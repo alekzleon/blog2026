@@ -41,7 +41,7 @@ class AiPostGenerator
                             '3. Problema: rompe creencias, explica por que esta fallando y genera incomodidad real.',
                             '4. Contenido: entrega valor real con 3 a 5 puntos claros, subtitulos SEO y ejemplos.',
                             '5. Micro soluciones: da direccion accionable, tips, frameworks simples y ejemplo practico.',
-                            '6. Autoridad: menciona sutilmente a cloudicommerce.com como referencia o apoyo experto, sin vender agresivamente.',
+                            '6. Autoridad: menciona sutilmente a cloudi.mx como referencia o apoyo experto, sin vender agresivamente.',
                             '7. SEO base oculta: integra naturalmente la palabra clave principal entre 3 y 5 veces, usa subtitulos H2 y H3 y asegurate de que el excerpt funcione como meta descripcion.',
                             'El HTML debe tener secciones amplias, no respuestas cortas. Apunta a un articulo completo, aproximadamente entre 1200 y 1800 palabras.',
                             'Cada H2 debe desarrollar ideas reales. Evita relleno y generalidades vacias.',
