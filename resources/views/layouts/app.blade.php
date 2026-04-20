@@ -269,21 +269,21 @@
                     return;
                 }
 
-                const existingConsent = localStorage.getItem(consentKey);
-
-                if (existingConsent === 'accepted' || existingConsent === 'rejected') {
-                    banner.remove();
-                    return;
-                }
-
-                banner.classList.remove('hidden');
-
                 const setCookieConsent = (value) => {
                     const maxAge = 60 * 60 * 24 * 180;
                     document.cookie = `cloudi_cookie_consent=${value}; max-age=${maxAge}; path=/; SameSite=Lax`;
                     localStorage.setItem(consentKey, value);
                     banner.remove();
                 };
+
+                const existingConsent = localStorage.getItem(consentKey);
+
+                if (existingConsent === 'accepted' || existingConsent === 'rejected') {
+                    setCookieConsent(existingConsent);
+                    return;
+                }
+
+                banner.classList.remove('hidden');
 
                 acceptButton.addEventListener('click', () => setCookieConsent('accepted'));
                 rejectButton.addEventListener('click', () => setCookieConsent('rejected'));

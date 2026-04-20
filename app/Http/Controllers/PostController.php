@@ -27,13 +27,11 @@ class PostController extends Controller
     {
         abort_unless($post->published_at && $post->published_at <= now(), 404);
 
-        if ($request->cookie('cloudi_cookie_consent') === 'accepted') {
-            $viewCookieName = 'post_viewed_' . $post->id;
+        $viewCookieName = 'post_viewed_' . $post->id;
 
-            if (! $request->cookie($viewCookieName)) {
-                $post->increment('views_count');
-                cookie()->queue(cookie($viewCookieName, '1', 60 * 24));
-            }
+        if (! $request->cookie($viewCookieName)) {
+            $post->increment('views_count');
+            cookie()->queue(cookie($viewCookieName, '1', 60 * 24 * 7));
         }
 
         $post->load(['category', 'tags']);
