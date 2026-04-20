@@ -8,6 +8,7 @@ use App\Http\Controllers\PanelPostController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\WhatsappBlogWebhookController;
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
@@ -15,6 +16,7 @@ Route::get('/blog/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/categoria/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/tag/{tag}', [TagController::class, 'show'])->name('tags.show');
 Route::post('/newsletter/subscribe', [NewsletterSubscriberController::class, 'store'])->name('newsletter.subscribe');
+Route::post('/webhooks/whatsapp-blog', WhatsappBlogWebhookController::class)->name('webhooks.whatsapp.blog');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('login');
     Route::post('/login', [AuthController::class, 'store'])->name('login.store');

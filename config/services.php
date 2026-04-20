@@ -41,4 +41,8 @@ return [
         'image_model' => env('OPENAI_IMAGE_MODEL', 'gpt-image-1'),
     ],
 
+    'whatsapp' => [
+        'blog_token' => env('WHATSAPP_BLOG_TOKEN'),
+    ],
+
 ];
